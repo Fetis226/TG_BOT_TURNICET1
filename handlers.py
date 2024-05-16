@@ -18,3 +18,25 @@ class Reg(StatesGroup):
     ID =State()
     code = State()
     parent_id = State()
+@router.message(Command('Старт'))
+async def start_one(message:Message, state: FSMContext):
+    await state.set_state(Reg.parent_name)
+    await message.answer('Введите своё ФИО')
+@router.message(Reg.parent_name)
+async def reg_two(message:Message, state: FSMContext):
+    await state.update_data(parent_name=message.text)
+    await state.set_state(Reg.ID)
+    await message.answer('Введите идентификационный номер')
+@router.message(Reg.ID)
+async def reg_two(message:Message, state: FSMContext):
+    await state.update_data(ID=message.text)
+    await state.set_state(Reg.code)
+    await message.answer('Введите код')
+@router.message(Reg.code)
+async def reg_two(message:Message, state: FSMContext):
+    await state.update_data(code=message.text, parent_id = message.from_user.id)
+    await state.update_data()
+    data = await state.get_data()
+    await message.answer(f'Успешно.\n {data["parent_name"]}\n {data["ID"]}\n {data["code"]}\n {data["parent_id"]}')
+    parent_log_reg(data)
+    await state.clear()
