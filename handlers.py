@@ -40,3 +40,13 @@ async def reg_two(message:Message, state: FSMContext):
     await message.answer(f'Успешно.\n {data["parent_name"]}\n {data["ID"]}\n {data["code"]}\n {data["parent_id"]}')
     parent_log_reg(data)
     await state.clear()
+@router.message(Command("S"))
+async def S(message: types.Message,
+            command : CommandObject):
+    if command.args is None:
+        await message.answer(
+            "Ошибка: не переданы аргументы"
+        )
+        return
+    argue = command.args
+    entry(argue)

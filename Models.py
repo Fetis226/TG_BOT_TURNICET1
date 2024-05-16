@@ -12,3 +12,9 @@ class Person(Base):
     parent_id = Column(Integer)
     code = Column(String, unique= True)
     group_id = Column(Integer)
+class log(Base):
+    __tablename__ = "log"
+    idlog = Column(Integer, primary_key=True, index=True, autoincrement= True)
+    date = Column(DateTime)
+    entry_id = Column(Integer, index= True)
+    Status = Column(Boolean, default= False)

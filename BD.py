@@ -17,3 +17,27 @@ def parent_log_reg(data):
             db.commit()
         else:
             print("Пользователь уже в системе")
+def entry(argue):
+    engine = create_engine("mysql+pymysql://root:2266@localhost/gaga")
+    print("success")
+    with Session(autoflush=False, bind=engine) as db:
+        Log = db.query(log)
+        Log.date = datetime.now()
+        Log.entry_id = argue
+        Log.Status = False
+        logstatus = db.query(log).filter(log.entry_id == Log.entry_id).order_by(log.idlog.desc()).first()
+        if logstatus == None:
+            Log.Status = True
+        else:
+            if logstatus.Status == True:
+                Log.Status = False
+            elif logstatus.Status == False:
+                Log.Status = True
+        logadd = log(
+            date = Log.date,
+            entry_id = Log.entry_id,
+            Status = Log.Status
+        )
+        db.add(logadd)
+        db.commit()
+        db.close()
