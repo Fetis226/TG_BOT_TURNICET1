@@ -18,3 +18,13 @@ class log(Base):
     date = Column(DateTime)
     entry_id = Column(Integer, index= True)
     Status = Column(Boolean, default= False)
+class raspisanie_1(Base):
+    __tablename__ = "raspisanie_1"
+    idrasp = Column(Integer, primary_key= True, index= True, autoincrement= True)
+    Pon = Column(Integer, default=0)
+    Vto = Column(Integer, default=0)
+    Sre = Column(Integer, default=0)
+    Che = Column(Integer, default=0)
+    Pt = Column(Integer, default=0)
+    sub = Column(Integer, default=0)
+    group = Column(Integer, default=0)
