@@ -40,6 +40,39 @@ async def reg_two(message:Message, state: FSMContext):
     await message.answer(f'Успешно.\n {data["parent_name"]}\n {data["ID"]}\n {data["code"]}\n {data["parent_id"]}')
     parent_log_reg(data)
     await state.clear()
+@router.message(Command('Send'))
+async def Send(types : Message, bot):
+    await asyncio.sleep(5)
+    while True:
+        row_count, Success = check()
+        print("row count --", row_count, Success)
+        print(Success)
+        if Success == True:
+            for i in range(row_count):
+                enter, status, par_id, idlog, Time, Group, engine = rassilka(i)
+                time = Time.strftime("%H:%M:%S")
+                otpr, verify = check_rasp(status, Time, Group)
+                if otpr == "Нет занятий":
+                    Text = f"Нет занятий, время {time}"
+                    await bot.send_message(chat_id=par_id, text=Text)
+                if verify == False and otpr == "Опоздал":
+                    Text = f"Ребенок опоздал, пришел в {time} "
+                    await bot.send_message(chat_id=par_id, text=Text)
+                if verify == True and otpr == "Вошел в учебное заведение":
+                    Text = f"Ребенок вошел в учебное заведение, пришел в {time} "
+                    await bot.send_message(chat_id=par_id, text=Text)
+                if verify == True and otpr == "вышел из учебного заведения":
+                    Text = f"Ребенок вышел из учебного заведения, вышел в {time}"
+                    await bot.send_message(chat_id=par_id, text=Text)
+                if verify == False and otpr == "вышел из учебного заведения":
+                    Text = f"Ребенок вышел из учебного заведения, вышел в {time}"
+                    await bot.send_message(chat_id=par_id, text=Text)
+                print(par_id, row_count, idlog)
+                idlog = idlog
+                rewrite_id(idlog)
+        elif Success == False:
+            print("Обновлений нет")
+        await asyncio.sleep(10)
 @router.message(Command("S"))
 async def S(message: types.Message,
             command : CommandObject):

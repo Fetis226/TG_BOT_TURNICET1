@@ -85,3 +85,102 @@ def check():
         else:
             Success = True
         return (row_count, Success)
+def Day(day, rasp):
+    if day == 1:
+        rasp_day = rasp.Pon
+        return (rasp_day)
+    elif day == 2:
+        rasp_day = rasp.Vto
+        return (rasp_day)
+    elif day == 3:
+        rasp_day = rasp.Sre
+        return (rasp_day)
+    elif day == 4:
+        rasp_day = rasp.Che
+        return (rasp_day)
+    elif day == 5:
+        rasp_day = rasp.Pt
+        return (rasp_day)
+    elif day == 6:
+        rasp_day = rasp.sub
+        return(rasp_day)
+def check_rasp(status, Time, Group):
+    engine = create_engine("mysql+pymysql://root:2266@localhost/gaga")
+    with Session(autoflush=False, bind=engine) as db:
+        if status == True:
+            print("WORK1")
+            rasp = db.query(raspisanie_1).filter(Group == raspisanie_1.group).first()
+            print(rasp.Pon)
+            day = datetime.isoweekday(Time)
+            print( "day", day)
+            rasp_day = Day(day, rasp)
+            if rasp_day !=0:
+                print('rasp_day----', rasp_day)
+                good_time = ""
+                Log_time = ""
+                log_time = int(Time.strftime('%H%M'))
+                if len(str(rasp_day)) < 8:
+                    print(len(str(rasp_day)))
+                    for i in range(3):
+                        good_time += str(rasp_day)[i]
+                        Log_time += str(log_time)[i + 1]
+                        print(good_time)
+                    if int(good_time) < int(Log_time):
+                        otpr = "Опоздал"
+                        verify = False
+                        print("aa", otpr, verify)
+                        return (otpr, verify)
+                    if int(good_time) >= int(Log_time):
+                        otpr = "Вошел в учебное заведение"
+                        verify = True
+                        print("aa", otpr, verify)
+                        return (otpr, verify)
+                if len(str(rasp_day)) == 8:
+                    for i in range(4):
+                        print("log time----", Log_time)
+                        good_time += str(rasp_day)[i]
+                        Log_time += str(log_time)[i]
+                        print(good_time)
+                        print(Log_time)
+                    if int(good_time) < int(Log_time):
+                        otpr = "Опоздал"
+                        verify = False
+                        return (otpr, verify)
+                    if int(good_time) >= int(Log_time):
+                        otpr = "Вошел в учебное заведение"
+                        verify = True
+                        print("aa", otpr, verify)
+                        return (otpr, verify)
+            else:
+                otpr = "Нет занятий"
+                verify = True
+                return(otpr, verify)
+        elif status == False:
+            rasp = db.query(raspisanie_1).filter(Group == raspisanie_1.group).first()
+            day = datetime.isoweekday(Time)
+            rasp_day = Day(day, rasp)
+            if rasp_day != 0:
+                good_time = ""
+                Log_time = ""
+                log_time = int(Time.strftime('%H%M'))
+                print("Log day", str(log_time))
+                if len(str(rasp_day)) <= 8:
+                    print("WORK1")
+                    for i in range(3):
+                        good_time += str(rasp_day)[i]
+                        Log_time += str(log_time)[i + 1]
+                        print(good_time)
+                    if int(good_time) <= int(Log_time):
+                        otpr = "вышел из учебного заведения"
+                        verify = True
+                        print("aa", otpr, verify)
+                        return (otpr, verify)
+                    if int(good_time) > int(Log_time):
+                        otpr = "ушел раньше окончания занятий"
+                        verify = False
+                        print("aa", otpr, verify)
+                        return (otpr, verify)
+            else:
+                otpr = "Нет занятий"
+                verify = True
+                return(otpr, verify)
