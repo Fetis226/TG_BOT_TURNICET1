@@ -119,42 +119,54 @@ def check_rasp(status, Time, Group):
                 good_time = ""
                 Log_time = ""
                 log_time = int(Time.strftime('%H%M'))
+                if len(str(log_time)) == 4:
+                    bol_des = True
+                if len(str(log_time)) == 3:
+                    bol_des = False
+                print(log_time, len(str(log_time)), bol_des)
                 if len(str(rasp_day)) < 8:
+                    print("WORK1 - entry")
                     print(len(str(rasp_day)))
                     for i in range(3):
-                        good_time += str(rasp_day)[i]
-                        Log_time += str(log_time)[i + 1]
-                        print(good_time)
+                        if i == 1:
+                            good_time += str(int(str(rasp_day)[i]) + 3)
+                        else:
+                            good_time += str(rasp_day)[i]
+                        Log_time += str(log_time)[i]
+                        print("good time ---",good_time, Log_time)
                     if int(good_time) < int(Log_time):
-                        otpr = "Опоздал"
-                        verify = False
-                        print("aa", otpr, verify)
-                        return (otpr, verify)
+                        otpr = "Учащийся опоздал"
+                        print("aa", otpr)
+                        return(otpr)
                     if int(good_time) >= int(Log_time):
-                        otpr = "Вошел в учебное заведение"
-                        verify = True
-                        print("aa", otpr, verify)
-                        return (otpr, verify)
+                        otpr = "Учащийся вошел в учебное заведение"
+                        print("aa", otpr)
+                        return(otpr)
                 if len(str(rasp_day)) == 8:
+                    print('WORK2 - entry')
                     for i in range(4):
                         print("log time----", Log_time)
-                        good_time += str(rasp_day)[i]
-                        Log_time += str(log_time)[i]
+                        if i == 2:
+                            good_time += str(int(str(rasp_day)[i]) + 3)
+                        else:
+                            good_time += str(rasp_day)[i]
+                        if bol_des == False and i < 3:
+                            Log_time += str(log_time)[i]
+                        if bol_des == True:
+                            Log_time += str(log_time)[i]
                         print(good_time)
                         print(Log_time)
+                        print("good time ---", good_time)
                     if int(good_time) < int(Log_time):
-                        otpr = "Опоздал"
-                        verify = False
-                        return (otpr, verify)
+                        otpr = "Учащийся опоздал"
+                        return(otpr)
                     if int(good_time) >= int(Log_time):
-                        otpr = "Вошел в учебное заведение"
-                        verify = True
-                        print("aa", otpr, verify)
-                        return (otpr, verify)
+                        otpr = "Учащийся вошел в учебное заведение"
+                        print("aa", otpr)
+                        return(otpr)
             else:
-                otpr = "Нет занятий"
-                verify = True
-                return(otpr, verify)
+                otpr = "Вход, нет занятий"
+                return(otpr)
         elif status == False:
             rasp = db.query(raspisanie_1).filter(Group == raspisanie_1.group).first()
             day = datetime.isoweekday(Time)
@@ -163,24 +175,46 @@ def check_rasp(status, Time, Group):
                 good_time = ""
                 Log_time = ""
                 log_time = int(Time.strftime('%H%M'))
-                print("Log day", str(log_time))
-                if len(str(rasp_day)) <= 8:
-                    print("WORK1")
-                    for i in range(3):
-                        good_time += str(rasp_day)[i]
-                        Log_time += str(log_time)[i + 1]
-                        print(good_time)
+                print('log time', log_time, len(str(log_time)))
+                if len(str(log_time)) == 4:
+                    bol_des = True
+                if len(str(log_time)) == 3:
+                    bol_des = False
+                print("Log day", str(log_time), bol_des)
+                if len(str(rasp_day)) == 8:
+                    print("WORK1-leave")
+                    for i in range(4):
+                        good_time += str(rasp_day)[4 + i]
+                        if bol_des == False and i < 3:
+                            Log_time += str(log_time)[i]
+                        if bol_des == True:
+                            Log_time += str(log_time)[i]
+                        print(good_time, Log_time)
                     if int(good_time) <= int(Log_time):
-                        otpr = "вышел из учебного заведения"
-                        verify = True
-                        print("aa", otpr, verify)
-                        return (otpr, verify)
+                        otpr = "Учащийся вышел из учебного заведения"
+                        print("aa", otpr)
+                        return(otpr)
                     if int(good_time) > int(Log_time):
-                        otpr = "ушел раньше окончания занятий"
-                        verify = False
-                        print("aa", otpr, verify)
-                        return (otpr, verify)
+                        otpr = "Учащийся вышел раньше окончания занятий"
+                        print("aa", otpr)
+                        return(otpr)
+                if len(str(rasp_day)) < 8:
+                    print("WORK2-leave")
+                    for i in range(4):
+                        good_time += str(rasp_day)[3 + i]
+                        if bol_des == False and i < 3:
+                            Log_time += str(log_time)[i]
+                        if bol_des == True:
+                            Log_time += str(log_time)[i]
+                        print(good_time, Log_time)
+                    if int(good_time) <= int(Log_time):
+                        otpr = "Учащийся вышел из учебного заведения"
+                        print("aa", otpr)
+                        return(otpr)
+                    if int(good_time) > int(Log_time):
+                        otpr = "Учащийся вышел раньше окончания занятий"
+                        print("aa", otpr)
+                        return(otpr)
             else:
-                otpr = "Нет занятий"
-                verify = True
-                return(otpr, verify)
+                otpr = "Выход, нет занятий"
+                return(otpr)
