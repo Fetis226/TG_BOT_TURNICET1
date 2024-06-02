@@ -3,6 +3,7 @@ import logging
 import asyncio
 from BD import parent_log_reg, rassilka, entry, check, rewrite_id, check_rasp
 from aiogram import Bot, Dispatcher, F, types
+from encoder import export_log
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.filters.command import Command, CommandObject
@@ -55,6 +56,7 @@ async def Send(types : Message, bot):
                 Text = f'{otpr}, {time}'
                 await bot.send_message(chat_id=par_id, text=Text)
                 print(par_id, row_count, idlog)
+                export_log()
                 idlog = idlog
                 rewrite_id(idlog)
         elif Success == False:
