@@ -32,27 +32,42 @@ def update_student():
         with io.open('студенты.json', 'r', encoding='utf-8') as f:
             json_data = json.load(f)
             print(json_data)
-
-            stud_par = db.query(Person).all()
+            a=0
             for i in json_data:
-                print(json_data.get(i))
-                db.add(Person(**json_data[i]))
-                db.commit()
+                for j in i:
+                    print(j)
+                    db.add(Person(**json_data[a]))
+                    db.commit()
+                    a += 1
+                if a+1>len(json_data):
+                    break
             json_data.clear()
-            db.commit()
             print(json_data)
-def update_raspisanie():
+
+def update_raspisan():
     with Session(autoflush=False, bind=engine) as db:
         with io.open('расписание.json', 'r', encoding='utf-8') as f:
             json_data = json.load(f)
+            print(json_data)
             a=0
             for i in json_data:
-                print(json_data.get(i))
-                if i == "start_time":
-                    print(i, json_data[i].get("start_time"), "time")
-                    json_data[i].update(start_time = datetime.datetime.strptime(str(json_data[i].get("start_time")), '%Y-%m-%dT%H:%M:%S'))
-                if i == "end_time":
-                    json_data[i].update(end_time=datetime.datetime.strptime(str(json_data[i].get("end_time")), '%Y-%m-%dT%H:%M:%S'))
-                db.add(raspisanie(**json_data[i]))
-                db.commit()
+                print(i,"dict")
+                for j in i:
+                    print(a, "<>", len(json_data))
+                    print(j, "---j")
+                    print(json_data[a], "dict--dict")
+                    if j == "start_time":
+                        print(json_data[a],"dict--dict")
+                        print(j, json_data[a].get("start_time"), "time")
+                        json_data[a].update(start_time=datetime.datetime.strptime(str(json_data[a].get("start_time")),
+                                                                                  '%Y-%m-%dT%H:%M:%S'))
+                    if j == "end_time":
+                        json_data[a].update(
+                            end_time=datetime.datetime.strptime(str(json_data[a].get("end_time")), '%Y-%m-%dT%H:%M:%S'))
+                    print(json_data, "--- finallo")
+                    db.add(raspisanie(**json_data[a]))
+                    db.commit()
+                    a += 1
+                if a+1>len(json_data):
+                    break
             json_data.clear()
