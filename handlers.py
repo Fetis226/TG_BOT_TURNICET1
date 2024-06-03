@@ -1,17 +1,12 @@
 from aiogram import Router
-import logging
 import asyncio
 from BD import parent_log_reg, rassilka, entry, check, rewrite_id, check_rasp
-from aiogram import Bot, Dispatcher, F, types
+from aiogram import types
 from encoder import export_log
-from aiogram.enums.parse_mode import ParseMode
-from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.filters.command import Command, CommandObject
 from aiogram.types import Message
-from config_reader import config
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
-import datetime
 
 router = Router()
 class Reg(StatesGroup):
@@ -46,8 +41,6 @@ async def Send(types : Message, bot):
     await asyncio.sleep(5)
     while True:
         row_count, Success = check()
-        print("row count --", row_count, Success)
-        print(Success)
         if Success == True:
             for i in range(row_count):
                 enter, status, par_id, idlog, Time, Group, engine = rassilka(i)
@@ -55,13 +48,12 @@ async def Send(types : Message, bot):
                 otpr = check_rasp(status, Time, Group)
                 Text = f'{otpr}, {time}'
                 await bot.send_message(chat_id=par_id, text=Text)
-                print(par_id, row_count, idlog)
                 export_log()
                 idlog = idlog
                 rewrite_id(idlog)
         elif Success == False:
             print("Обновлений нет")
-        await asyncio.sleep(10)
+        await asyncio.sleep(120)
 @router.message(Command("S"))
 async def S(message: types.Message,
             command : CommandObject):
