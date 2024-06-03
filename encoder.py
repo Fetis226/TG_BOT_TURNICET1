@@ -71,7 +71,7 @@ def update_student():
             json_data.clear()
             print(json_data)
 
-def update_raspisan():
+def update_raspisanie():
     with Session(autoflush=False, bind=engine) as db:
         with io.open('расписание.json', 'r', encoding='utf-8') as f:
             json_data = json.load(f)
@@ -98,4 +98,3 @@ def update_raspisan():
                 if a+1>len(json_data):
                     break
             json_data.clear()
-export_log()
