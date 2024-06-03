@@ -11,7 +11,6 @@ from Models import Person, log, Base, raspisanie_1, raspisanie
 metadata = db.MetaData()
 engine = create_engine("mysql+pymysql://root:2266@localhost/gaga")
 def alchemyencoder(obj):
-    """JSON encoder function for SQLAlchemy special classes."""
     if isinstance(obj, datetime.date):
         return obj.isoformat()
     elif isinstance(obj, str):
